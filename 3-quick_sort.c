@@ -1,79 +1,88 @@
 #include "sort.h"
-#include <stdio.h>
 
 /**
- * partition - finds the partition for the quicksort using the Lomuto scheme
- * @array: array to sort
- * @lo: lowest index of the partition to sort
- * @hi: highest index of the partition to sort
- * @size: size of the array
+ * myswap - swaps two values
  *
- * Return: index of the partition
+ * @array: data sort input
+ * @firts: first
+ * @second: second
+ * @size: size
+ *
+ * Return: No Return
  */
-size_t partition(int *array, ssize_t lo, ssize_t hi, size_t size)
+void myswap(int *array, int firts, int second, int size)
 {
-	ssize_t i, j;
-	int swap, pivot;
+	int tmp;
 
-	pivot = array[hi];
-	i = lo - 1;
-	for (j = lo; j < hi; j++)
+	if (array[firts] != array[second])
+	{
+		tmp = array[firts];
+		array[firts] = array[second];
+		array[second] = tmp;
+		print_array(array, size);
+	}
+}
+
+/**
+ * part - part to a pivot
+ *
+ * @array: data sort input
+ * @left: left
+ * @right: right
+ * @size: size input
+ *
+ * Return: New pivote
+ */
+int part(int *array, int left, int right, size_t size)
+{
+	int i = left, j, pivot  = array[right];
+
+	for (j = left; j <= right; j++)
 	{
 		if (array[j] < pivot)
 		{
+			myswap(array, i, j, size);
 			i++;
-			if (i != j)
-			{
-				swap = array[i];
-				array[i] = array[j];
-				array[j] = swap;
-				print_array(array, size);
-			}
 		}
 	}
-	if (array[hi] < array[i + 1])
-	{
-		swap = array[i + 1];
-		array[i + 1] = array[hi];
-		array[hi] = swap;
-		print_array(array, size);
-	}
-	return (i + 1);
+	myswap(array, i, right, size);
+
+	return (i);
 }
 
 /**
- * quicksort - sorts a partition of an array of integers
- * @array: array to sort
- * @lo: lowest index of the partition to sort
- * @hi: highest index of the partition to sort
- * @size: size of the array
+ * myquicksort -  quick sort algorithm
  *
- * Return: void
+ * @array: data to sort
+ * @left: left pivote
+ * @right: right pivote
+ * @size: size input
+ * Return: No Return
  */
-void quicksort(int *array, ssize_t lo, ssize_t hi, size_t size)
+void myquicksort(int *array, int left, int right, size_t size)
 {
-	ssize_t pivot;
+	int pivote;
 
-	if (lo < hi)
+	if (left < right)
 	{
-		pivot = partition(array, lo, hi, size);
-		quicksort(array, lo, pivot - 1, size);
-		quicksort(array, pivot + 1, hi, size);
-
+		pivote = part(array, left, right, size);
+		myquicksort(array, left, pivote - 1, size);
+		myquicksort(array, pivote + 1, right, size);
 	}
 }
 
 /**
- * quick_sort - sorts an array of integers in ascending order using the
- * Quick sort algorithm
- * @array: The array to sort
- * @size: The size of the array
+ * quick_sort -  quick sort algorithm
  *
- * Return: void
+ * @array: sort data
+ * @size: size input
+ *
+ * Return: No Return
  */
 void quick_sort(int *array, size_t size)
 {
-	if (array == NULL || size < 2)
+	if (size < 2)
 		return;
-	quicksort(array, 0, size - 1, size);
+
+	myquicksort(array, 0, size - 1, size);
 }
